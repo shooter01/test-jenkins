@@ -6,6 +6,9 @@ pipeline {
     agent { 
         label 'master || built-in'
     }
+    environment {
+        tag = sh(returnStdout: true, script: "git rev-parse -short=10 HEAD | tail -n +2")
+    }
     triggers { pollSCM('* * * * *') }
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -22,5 +25,12 @@ pipeline {
                 }
             }
         }
+        stage("create docker image") {
+            steps {
+                echo " ============== start building image =================="
+                sh 'docker build . -t shooter12/toolbox:${tag}'
+            }
+        }
+       
     }
 }
