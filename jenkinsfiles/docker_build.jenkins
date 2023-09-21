@@ -43,7 +43,7 @@ pipeline {
         stage('push docker image') {
             steps {
                 echo ' ============== start pushing image =================='
-                sh "docker build . -t ${docker_push_name}"
+                sh "docker push ${docker_push_name}"
             }
         }
     }
