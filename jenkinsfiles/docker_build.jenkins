@@ -3,42 +3,49 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent { 
+    agent {
         label 'master || built-in'
     }
     environment {
-        tag = sh(returnStdout: true, script: "git rev-parse -short=10 HEAD | tail -n +2")
-        docker_tag = "testreactapp"
-        docker_push_name = '${testreactapp}:${tag}'
+        tag = sh(returnStdout: true, script: 'git rev-parse -short=10 HEAD | tail -n +2')
+        docker_tag = 'testreactapp'
+        docker_push_name = "${testreactapp}:${tag}"
+        ten = '10'
     }
     triggers { pollSCM('* * * * *') }
     options {
-        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: ten, artifactNumToKeepStr: ten))
         timestamps()
     }
     stages {
-         stage("docker login") {
+        stage('docker login') {
             steps {
-                echo " ============== docker login =================="
-                withCredentials([usernamePassword(credentialsId: 'dockerhub_id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh """
-                    docker login -u $USERNAME -p $PASSWORD
-                    """
-                }
+                echo ' ============== docker login =================='
+                withCredentials(
+                    [
+                        usernamePassword(
+                            credentialsId: 'dockerhub_id',
+                            usernameVariable: 'USERNAME',
+                            passwordVariable: 'PASSWORD')
+                        ]
+                    ) {
+                        sh """
+                        docker login -u $USERNAME -p $PASSWORD
+                        """
+                    }
             }
         }
-        stage("create docker image") {
+        stage('create docker image') {
             steps {
-                echo " ============== start building image =================="
-                sh 'docker build . -t ${docker_push_name}'
+                echo ' ============== start building image =================='
+                sh "docker build . -t ${docker_push_name}"
             }
         }
-        stage("push docker image") {
+        stage('push docker image') {
             steps {
-                echo " ============== start building image =================="
-                sh 'docker build . -t ${docker_push_name}'
+                echo ' ============== start pushing image =================='
+                sh "docker build . -t ${docker_push_name}"
             }
         }
-       
     }
 }
