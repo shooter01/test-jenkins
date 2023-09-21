@@ -17,49 +17,41 @@ pipeline {
         timestamps()
     }
     stages {
-        stage('docker login') {
-            steps {
-                echo ' ============== docker login =================='
-                withCredentials(
-                    [
-                        usernamePassword(
-                            credentialsId: 'dockerhub_id',
-                            usernameVariable: 'USERNAME',
-                            passwordVariable: 'PASSWORD')
-                        ]
-                    ) {
-                        sh """
-                        docker login -u $USERNAME -p $PASSWORD
-                        """
-                    }
-            }
-        }
-        stage('create docker image') {
-            steps {
-                echo ' ============== start building image =================='
-                sh "docker build . -t ${docker_push_name}"
-            }
-        }
-        stage('push docker image') {
-            steps {
-                echo ' ============== start pushing image =================='
-                sh "docker push ${docker_push_name}"
-            }
-        }
+        // stage('docker login') {
+        //     steps {
+        //         echo ' ============== docker login =================='
+        //         withCredentials(
+        //             [
+        //                 usernamePassword(
+        //                     credentialsId: 'dockerhub_id',
+        //                     usernameVariable: 'USERNAME',
+        //                     passwordVariable: 'PASSWORD')
+        //                 ]
+        //             ) {
+        //                 sh """
+        //                 docker login -u $USERNAME -p $PASSWORD
+        //                 """
+        //             }
+        //     }
+        // }
+        // stage('create docker image') {
+        //     steps {
+        //         echo ' ============== start building image =================='
+        //         sh "docker build . -t ${docker_push_name}"
+        //     }
+        // }
+        // stage('push docker image') {
+        //     steps {
+        //         echo ' ============== start pushing image =================='
+        //         sh "docker push ${docker_push_name}"
+        //     }
+        // }
         stage('login server') {
             steps {
                 echo ' ============== start loggining server =================='
-                withCredentials(
-                    [
-                        usernamePassword(
-                            credentialsId: 'kvz_id',
-                            usernameVariable: 'USERNAME')
-                        ]
-                    ) {
-                        sh """
-                        ssh $USERNAME@root@213.159.209.3
-                        """
-                    }
+                sshagent(credentials : ['kvz_id']) {
+                    sh 'ssh root@13.159.209.3'
+                }
             }
         }
     }
