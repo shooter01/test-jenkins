@@ -10,7 +10,6 @@ pipeline {
         tag = sh(returnStdout: true, script: 'git rev-parse -short=10 HEAD | tail -n +2')
         docker_tag = 'testreactapp'
         docker_push_name = "${testreactapp}:${tag}"
-        ten = '10'
     }
     triggers { pollSCM('* * * * *') }
     options {
