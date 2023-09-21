@@ -13,7 +13,7 @@ pipeline {
     }
     triggers { pollSCM('* * * * *') }
     options {
-        buildDiscarder(logRotator(numToKeepStr: "${ten}", artifactNumToKeepStr: "${ten}"))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
     stages {
