@@ -46,5 +46,21 @@ pipeline {
                 sh "docker push ${docker_push_name}"
             }
         }
+        stage('login server') {
+            steps {
+                echo ' ============== start loggining server =================='
+                withCredentials(
+                    [
+                        usernamePassword(
+                            credentialsId: 'kvz_id',
+                            usernameVariable: 'USERNAME')
+                        ]
+                    ) {
+                        sh """
+                        ssh $USERNAME@root@213.159.209.3
+                        """
+                    }
+            }
+        }
     }
 }
