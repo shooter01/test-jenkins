@@ -50,6 +50,9 @@ pipeline {
             steps {
                 echo ' ============== start loggining server =================='
                 sh 'ssh root@213.159.209.3'
+                sh 'pwd'
+                sh 'cd /var/www/round'
+                sh 'git pull'
             }
         }
     }
