@@ -49,11 +49,11 @@ pipeline {
         stage('login server') {
             steps {
                 echo ' ============== start loggining server =================='
-                sh """
+                sh '''
                 ssh root@213.159.209.3
                 pwd
-                """
-
+                '''
             }
         }
     }
+}
