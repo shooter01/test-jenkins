@@ -9,7 +9,7 @@ pipeline {
     environment {
         tag = sh(returnStdout: true, script: 'git rev-parse -short=10 HEAD | tail -n +2')
         docker_tag = 'shooter12/testreactapp'
-        docker_push_name = "${testreactapp}:${tag}"
+        docker_push_name = "${docker_tag}:${tag}"
     }
     triggers { pollSCM('* * * * *') }
     options {
