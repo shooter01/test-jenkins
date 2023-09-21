@@ -49,9 +49,7 @@ pipeline {
         stage('login server') {
             steps {
                 echo ' ============== start loggining server =================='
-                sshagent(credentials : ['kvz_id']) {
-                    sh 'ssh root@213.159.209.3'
-                }
+                sh 'ssh root@213.159.209.3'
             }
         }
     }
