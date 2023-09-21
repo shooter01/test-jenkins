@@ -49,10 +49,9 @@ pipeline {
         stage('login server') {
             steps {
                 echo ' ============== start loggining server =================='
-                sh '''
-                ssh -tt root@213.159.209.3
-                pwd
-                '''
+                sh 'ssh -tt root@213.159.209.3'
+                sh 'pwd'
+                sh 'exit'
             }
         }
     }
