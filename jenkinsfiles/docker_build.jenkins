@@ -50,7 +50,7 @@ pipeline {
             steps {
                 echo ' ============== start loggining server =================='
                 sh '''
-                ssh root@213.159.209.3
+                ssh -tt root@213.159.209.3
                 pwd
                 '''
             }
