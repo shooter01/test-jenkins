@@ -8,6 +8,8 @@ pipeline {
     }
     environment {
         tag = sh(returnStdout: true, script: "git rev-parse -short=10 HEAD | tail -n +2")
+        docker_tag = "testreactapp"
+        docker_push_name = '${testreactapp}:${tag}'
     }
     triggers { pollSCM('* * * * *') }
     options {
@@ -28,7 +30,13 @@ pipeline {
         stage("create docker image") {
             steps {
                 echo " ============== start building image =================="
-                sh 'docker build . -t shooter12/toolbox:${tag}'
+                sh 'docker build . -t ${docker_push_name}'
+            }
+        }
+        stage("push docker image") {
+            steps {
+                echo " ============== start building image =================="
+                sh 'docker build . -t ${docker_push_name}'
             }
         }
        
