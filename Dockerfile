@@ -1,13 +1,7 @@
-FROM node:alpine
-
-# installing curl
-RUN apk --no-cache add curl
+FROM node:18-alpine as builder
 
 # Set working directory
 WORKDIR /usr/app
-
-# Install PM2 globally
-RUN npm install --global pm2
 
 # Copy "package.json" and "package-lock.json" before other files
 # Utilise Docker cache to save re-installing dependencies if unchanged
@@ -22,12 +16,23 @@ COPY ./ ./
 # Build app
 RUN npm run build
 
-# Expose the listening port
-EXPOSE 3000
-
 # Run container as non-root (unprivileged) user
 # The "node" user is provided in the Node.js Alpine base image
 USER root
 
-# Launch app with PM2
-CMD [ "npm", "run", "dev" ]
+FROM nginx:alpine
+
+WORKDIR /etc/nginx/html/
+
+COPY --from=builder /usr/app/dist /etc/nginx/html/
+
+# Expose the listening port
+EXPOSE 80
+
+USER root
+
+COPY ./config/nginx/prod.conf /etc/nginx/conf.d/prod.conf
+
+# ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]
